@@ -70,7 +70,7 @@ export default {
     timeout: '超时',
     socks: 'Socks',
     httpsProxy: 'HTTPS Proxy',
-    balance: 'API余额',
+    balance: 'Balance',
     monthlyUsage: '本月使用量',
   },
   store: {
