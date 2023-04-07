@@ -12,7 +12,3 @@ export interface RequestOptions {
 export interface BalanceResponse {
   total_usage: number
 }
-
-export interface BalanceResponse {
-  total_usage: number
-}
