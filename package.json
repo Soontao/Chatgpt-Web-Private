@@ -1,6 +1,6 @@
 {
   "name": "chatgpt-web",
-  "version": "2.10.8",
+  "version": "2.10.9",
   "private": false,
   "packageManager": "pnpm@7.29.1",
   "description": "ChatGPT Web",
