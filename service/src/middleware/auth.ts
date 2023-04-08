@@ -1,13 +1,12 @@
-import { isNotEmptyString } from '../utils/is'
+import type { RequestHandler } from 'express'
+import { KEY_LIST, hasAuth } from 'src/utils/key'
 
-const auth = async (req, res, next) => {
-  const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
-  if (isNotEmptyString(AUTH_SECRET_KEY)) {
+const auth: RequestHandler = async (req, res, next) => {
+  if (hasAuth) {
     try {
       const Authorization = req.header('Authorization')
-      if (!Authorization || Authorization.replace('Bearer ', '').trim() !== AUTH_SECRET_KEY.trim())
+      if (!Authorization || !KEY_LIST.includes(Authorization.substring('Bearer '.length).trim()))
         throw new Error('Error: 无访问权限 | No access rights')
-      next()
     }
     catch (error) {
       res.send({ status: 'Unauthorized', message: error.message ?? 'Please authenticate.', data: null })

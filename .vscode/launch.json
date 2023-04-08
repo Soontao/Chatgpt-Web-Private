@@ -5,21 +5,23 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Launch Service Server",
+      "program": "${workspaceFolder}/service/node_modules/esno/esno.js",
+      "args": ["${workspaceFolder}/service/src/index.ts"],
+      "cwd": "${workspaceFolder}/service",
+      "request": "launch",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "envFile": "${workspaceFolder}/service/.env",
+      "type": "node"
+    },
+    {
       "type": "chrome",
       "request": "launch",
       "name": "Launch Web App",
       "url": "http://localhost:1002",
       "webRoot": "${workspaceFolder}"
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Launch Service Server",
-      "runtimeExecutable": "${workspaceFolder}/service/node_modules/.bin/esno",
-      "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/service/src/index.ts",
-      "outFiles": ["${workspaceFolder}/service/**/*.js"],
-      "envFile": "${workspaceFolder}/service/.env"
     }
   ]
 }
