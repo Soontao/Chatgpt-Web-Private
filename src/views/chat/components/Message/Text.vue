@@ -6,6 +6,7 @@ import mila from 'markdown-it-link-attributes'
 import hljs from 'highlight.js'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
+import { useSettingStore } from '@/store'
 
 interface Props {
   inversion?: boolean
@@ -56,6 +57,10 @@ const text = computed(() => {
   return value
 })
 
+const settings = useSettingStore()
+
+const fontSize = computed(() => settings.font_size)
+
 function highlightBlock(str: string, lang?: string) {
   return `<pre class="code-block-wrapper"><div class="code-block-header"><span class="code-block-header__lang">${lang}</span><span class="code-block-header__copy">${t('chat.copyCode')}</span></div><code class="hljs code-block-body ${lang}">${str}</code></pre>`
 }
@@ -67,10 +72,10 @@ defineExpose({ textRef })
   <div class="text-black" :class="wrapClass">
     <div ref="textRef" class="leading-relaxed break-words">
       <div v-if="!inversion">
-        <div v-if="!asRawText" class="markdown-body" v-html="text" />
+        <div v-if="!asRawText" :style="`font-size: ${fontSize}rem`" class="markdown-body" v-html="text" />
         <div v-else class="whitespace-pre-wrap" v-text="text" />
       </div>
-      <div v-else class="whitespace-pre-wrap" v-text="text" />
+      <div v-else class="whitespace-pre-wrap" :style="`font-size: ${fontSize}rem`" v-text="text" />
       <template v-if="loading">
         <span class="dark:text-white w-[4px] h-[20px] block animate-blink" />
       </template>

@@ -5,6 +5,19 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Launch Vite",
+      "request": "launch",
+      "runtimeArgs": [
+        "run-script",
+        "dev"
+      ],
+      "runtimeExecutable": "npm",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node"
+    },
+    {
       "name": "Launch Service Server",
       "program": "${workspaceFolder}/service/node_modules/esno/esno.js",
       "args": ["${workspaceFolder}/service/src/index.ts"],

@@ -15,6 +15,8 @@ const temperature = ref(settingStore.temperature ?? 0.5)
 
 const top_p = ref(settingStore.top_p ?? 1)
 
+const font_size = ref(settingStore.font_size ?? 0.9)
+
 function updateSettings(options: Partial<SettingsState>) {
   settingStore.updateSetting(options)
   ms.success(t('common.success'))
@@ -56,6 +58,16 @@ function handleReset() {
         </div>
         <span>{{ top_p }}</span>
         <NButton size="tiny" text type="primary" @click="updateSettings({ top_p })">
+          {{ $t('common.save') }}
+        </NButton>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[120px]">{{ $t('setting.font_size') }} </span>
+        <div class="flex-1">
+          <NSlider v-model:value="font_size" :max="1.5" :min="0" :step="0.05" />
+        </div>
+        <span>{{ font_size }}</span>
+        <NButton size="tiny" text type="primary" @click="updateSettings({ font_size })">
           {{ $t('common.save') }}
         </NButton>
       </div>

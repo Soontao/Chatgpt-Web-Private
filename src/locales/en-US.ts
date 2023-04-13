@@ -61,6 +61,7 @@ export default {
     role: 'Role',
     temperature: 'Temperature',
     top_p: 'Top_p',
+    font_size: 'Font Size',
     resetUserInfo: 'Reset UserInfo',
     chatHistory: 'ChatHistory',
     theme: 'Theme',
