@@ -5,6 +5,7 @@ import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 import httpsProxyAgent from 'https-proxy-agent'
 import fetch from 'node-fetch'
+import { cacheItTTL } from '@newdash/newdash'
 import { sendResponse } from '../utils'
 import { isNotEmptyString } from '../utils/is'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
@@ -168,18 +169,23 @@ function formatDate(): string[] {
   return [formattedFirstDay, formattedLastDay]
 }
 
-async function chatConfig() {
-  const usage = await fetchUsage()
-  const reverseProxy = process.env.API_REVERSE_PROXY ?? '-'
-  const httpsProxy = (process.env.HTTPS_PROXY || process.env.ALL_PROXY) ?? '-'
-  const socksProxy = (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT)
-    ? (`${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`)
-    : '-'
-  return sendResponse<ModelConfig>({
-    type: 'Success',
-    data: { apiModel, reverseProxy, timeoutMs, socksProxy, httpsProxy, usage },
-  })
-}
+const chatConfig = cacheItTTL(
+  async () => {
+    const usage = await fetchUsage()
+    const reverseProxy = process.env.API_REVERSE_PROXY ?? '-'
+    const httpsProxy = (process.env.HTTPS_PROXY || process.env.ALL_PROXY) ?? '-'
+    const socksProxy = (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT)
+      ? (`${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`)
+      : '-'
+    return sendResponse<ModelConfig>({
+      type: 'Success',
+      data: { apiModel, reverseProxy, timeoutMs, socksProxy, httpsProxy, usage },
+    })
+  },
+  {
+    providerArgs: [5 * 60 * 1000],
+  },
+)
 
 function setupProxy(options: SetProxyOptions) {
   if (isNotEmptyString(process.env.SOCKS_PROXY_HOST) && isNotEmptyString(process.env.SOCKS_PROXY_PORT)) {
