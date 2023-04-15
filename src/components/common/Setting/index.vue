@@ -38,7 +38,7 @@ const show = computed({
 <template>
   <NModal v-model:show="show" :auto-focus="false" preset="card" style="width: 95%; max-width: 640px">
     <div>
-      <NTabs v-model:value="active" type="line" animated>
+      <NTabs v-model:value="active" type="line">
         <NTabPane name="General" tab="General">
           <template #tab>
             <SvgIcon class="text-lg" icon="ri:file-user-line" />
