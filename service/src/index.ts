@@ -9,6 +9,15 @@ import { KEY_LIST, hasAuth } from './utils/key'
 const app = express()
 const router = express.Router()
 
+if (process.env.X_AUTH_KEY) {
+  app.use((req, res, next) => {
+    if (req.headers['x-auth'] !== process.env.X_AUTH_KEY)
+      return res.status(401).json({ message: 'x-auth unauthorized' })
+
+    next()
+  })
+}
+
 app.use(express.static('public'))
 app.use(express.json())
 
