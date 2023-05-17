@@ -1,7 +1,9 @@
 version: '3'
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.native
     ports:
       - 127.0.0.1:3002:3002
     restart: always
