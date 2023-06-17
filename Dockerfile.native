@@ -55,4 +55,6 @@ COPY --from=backend /app/build /app/build
 
 EXPOSE 3002
 
-CMD ["node", "/app/build/index.js"]
+ENV NEW_RELIC_APP_NAME=chatgpt-web-server
+
+CMD ["node", "-r", "newrelic" , "/app/build/index.js"]
