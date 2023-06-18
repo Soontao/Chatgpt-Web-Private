@@ -1,3 +1,4 @@
+import './tracing'
 import express from 'express'
 import type { RequestProps } from './types'
 import type { ChatMessage } from './chatgpt'
