@@ -53,7 +53,7 @@ COPY --from=frontend /app/dist /app/public
 
 COPY --from=backend /app/build /app/build
 
-ENV OTEL_SERVICE_NAME=chatgpt-server
+ENV NODE_ENV=production
 
 EXPOSE 3002
 
