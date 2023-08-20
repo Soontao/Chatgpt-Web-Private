@@ -22,6 +22,13 @@ function handleAdd() {
     appStore.setSiderCollapsed(true)
 }
 
+document.addEventListener('keydown', (event) => {
+  if (event.altKey && event.key === 'n') {
+    handleAdd()
+    event.preventDefault()
+  }
+})
+
 function handleUpdateCollapsed() {
   appStore.setSiderCollapsed(!collapsed.value)
 }
