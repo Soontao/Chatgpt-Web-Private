@@ -9,7 +9,7 @@ import { cacheItTTL } from '@newdash/newdash'
 import { sendResponse } from '../utils'
 import { isNotEmptyString } from '../utils/is'
 import type { ApiModel, ChatContext, ModelConfig } from '../types'
-import type { RequestOptions, SetProxyOptions, UsageResponse } from './types'
+import type { RequestOptions, SetProxyOptions } from './types'
 
 const { HttpsProxyAgent } = httpsProxyAgent
 
@@ -91,56 +91,8 @@ async function chatReplyProcess(options: RequestOptions) {
   }
 }
 
-async function fetchUsage() {
-  const OPENAI_API_KEY = process.env.OPENAI_API_KEY
-  const OPENAI_API_BASE_URL = process.env.OPENAI_API_BASE_URL
-
-  const API_BASE_URL = isNotEmptyString(OPENAI_API_BASE_URL)
-    ? OPENAI_API_BASE_URL
-    : 'https://api.openai.com'
-
-  const [startDate, endDate] = formatDate()
-
-  // 每月使用量
-  const urlUsage = `${API_BASE_URL}/v1/dashboard/billing/usage?start_date=${startDate}&end_date=${endDate}`
-
-  const headers = {
-    'Authorization': `Bearer ${OPENAI_API_KEY}`,
-    'Content-Type': 'application/json',
-  }
-
-  const options = {} as SetProxyOptions
-
-  setupProxy(options)
-
-  try {
-    // 获取已使用量
-    const useResponse = await options.fetch(urlUsage, { headers })
-    if (!useResponse.ok)
-      throw new Error('获取使用量失败')
-    const usageData = await useResponse.json() as UsageResponse
-    const usage = Math.round(usageData.total_usage) / 100
-    return Promise.resolve(usage ? `$${usage}` : '-')
-  }
-  catch (error) {
-    global.console.log(error)
-    return Promise.resolve('-')
-  }
-}
-
-function formatDate(): string[] {
-  const today = new Date()
-  const year = today.getFullYear()
-  const month = today.getMonth() + 1
-  const lastDay = new Date(year, month, 0)
-  const formattedFirstDay = `${year}-${month.toString().padStart(2, '0')}-01`
-  const formattedLastDay = `${year}-${month.toString().padStart(2, '0')}-${lastDay.getDate().toString().padStart(2, '0')}`
-  return [formattedFirstDay, formattedLastDay]
-}
-
 const chatConfig = cacheItTTL(
   async () => {
-    const usage = await fetchUsage()
     const reverseProxy = process.env.API_REVERSE_PROXY ?? '-'
     const httpsProxy = (process.env.HTTPS_PROXY || process.env.ALL_PROXY) ?? '-'
     const socksProxy = (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT)
@@ -148,7 +100,7 @@ const chatConfig = cacheItTTL(
       : '-'
     return sendResponse<ModelConfig>({
       type: 'Success',
-      data: { apiModel, reverseProxy, timeoutMs, socksProxy, httpsProxy, usage },
+      data: { apiModel, reverseProxy, timeoutMs, socksProxy, httpsProxy, usage: 'Not Applicable', model },
     })
   },
   {

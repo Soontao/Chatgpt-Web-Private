@@ -51,6 +51,7 @@ export default {
     showRawText: '显示原文',
   },
   setting: {
+    model: '模型',
     setting: '设置',
     general: '总览',
     advanced: '高级',

@@ -3,12 +3,11 @@ import type { RequestProps } from './types'
 import type { ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess, currentModel } from './chatgpt'
 import { auth } from './middleware/auth'
-import { limiter } from './middleware/limiter'
 import { KEY_LIST, hasAuth } from './utils/key'
 
 const main_router = express.Router()
 
-main_router.post('/chat-process', [auth, limiter], async (req, res) => {
+main_router.post('/chat-process', [auth], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
 
   try {
